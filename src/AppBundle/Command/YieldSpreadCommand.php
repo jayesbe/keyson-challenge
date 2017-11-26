@@ -38,6 +38,9 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $data = $this->getData($input, $output);
+        if (empty($data)) {
+            return;
+        }
         
         $calculator = new CorporateVsGovernmentBondCalculator(
             $data[parent::BOND_TYPE_CORPORATE], $data[parent::BOND_TYPE_GOVERNMENT]
