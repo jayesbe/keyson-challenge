@@ -101,6 +101,7 @@ class CorporateVsGovernmentBondCalculator
         
         foreach ($this->corporateBonds as $i => $corporateBond) {
             $currentDelta = null;
+            $currentGovernmentBond = null;
 
             foreach ($this->governmentBonds as $j => $governmentBond) {
                 $delta = abs($governmentBond['term'] - $corporateBond['term']);
@@ -108,13 +109,18 @@ class CorporateVsGovernmentBondCalculator
                     continue;
                 }
                 $currentDelta = $delta;
+                $currentGovernmentBond = $j;
+            }
+            
+            if (!is_null($currentDelta)) {
+                $g = $this->governmentBonds[$currentGovernmentBond];
                 
                 $corporateBonds[] = [
                     'bond' => $corporateBond['bond'],
                     'benchmark' => [
-                        'bond' => $governmentBond['bond'],
-                        'delta' => abs($corporateBond['term'] - $governmentBond['term']),
-                        'spread' => $corporateBond['yield'] - $governmentBond['yield']
+                        'bond' => $g['bond'],
+                        'delta' => abs($corporateBond['term'] - $g['term']),
+                        'spread' => $corporateBond['yield'] - $g['yield']
                     ]
                 ];
             }
